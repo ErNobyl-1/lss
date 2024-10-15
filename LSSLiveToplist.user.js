@@ -43,5 +43,6 @@
         }
     }
     toplistlivebootstrap();
+    updatePlace();
     setInterval(updatePlace, 1000);
 })();
