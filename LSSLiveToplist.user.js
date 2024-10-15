@@ -6,7 +6,7 @@
 // @author       ErNobyl
 // @match        https://www.leitstellenspiel.de/
 // @grant        none
-// @updateURL    
+// @updateURL    https://github.com/ErNobyl-1/lss/raw/refs/heads/main/LSSLiveToplist.user.js
 // ==/UserScript==
 
 (function() {
