@@ -12,6 +12,7 @@
 /*
 TODO
 
+- be better at github
 - save last used map tiles and use it when reloading the page
 
 */
