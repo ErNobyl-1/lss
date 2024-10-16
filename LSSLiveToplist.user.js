@@ -42,7 +42,9 @@
             savedcredits = lastcredits;
         }
     }
-    toplistlivebootstrap();
-    updatePlace();
-    setInterval(updatePlace, 1000);
+    $( document ).ready(function() {
+        toplistlivebootstrap();
+        updatePlace();
+        setInterval(updatePlace, 1000);
+    });
 })();
