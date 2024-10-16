@@ -29,6 +29,7 @@ TODO
         .mission_progress { margin: 0; padding: 0; margin-bottom: 5px; }
         .patient_progress { margin: 0; padding: 0; margin-bottom: 2.5px; }
         .mission_vehicle_state { display: none; }
+        .panel-default { margin-bottom: 5px; }
         </style>
         `);
         // add Einsätze
@@ -41,7 +42,7 @@ TODO
         ];
         const colint = Math.floor(12 / einsatzlisten.length);
         for(var i = 0; i < einsatzlisten.length; i++) {
-            $('#redesign-missions-outer').append('<div class="col-xs-'+colint+'" id="redesign-missions-list-'+i+'" style="height: 100%; overflow-y: scroll; overflow-x: hidden;"></div>');
+            $('#redesign-missions-outer').append('<div class="col-xs-'+colint+'" id="redesign-missions-list-'+i+'" style="height: 100%; overflow-y: scroll; overflow-x: hidden; padding: 0px 2px 0px 5px;"></div>');
             for(var j = 0; j < einsatzlisten[i].length; j++) {
                 $('#redesign-missions-list-'+i).append($('#'+einsatzlisten[i][j]));
             }
