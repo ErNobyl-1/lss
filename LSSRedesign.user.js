@@ -142,7 +142,7 @@ TODO
             $('#redesign-task').append($('#completed_tasks_counter'));
             $('#redesign-user-link').attr('href', '/profile/'+user_id).append(username);
             // add Einsätze
-            $('body').prepend('<div class="row p-3" id="redesign-missions-outer" style="margin: 0; padding: 10px 0px;"></div>');
+            $('body').prepend('<div class="row" id="redesign-missions-outer" style="margin: 0; padding: 10px 5px 7px 10px;"></div>');
             $('#redesign-missions-outer').addClass('halfscreen');
             const einsatzlisten = [
                 ["mission_list"],
@@ -161,6 +161,7 @@ TODO
             $('#redesign-missions-outer').before($('#map'));
             $('#map').addClass('halfscreen');
             redesignMap();
+            map.zoomOut(3);
         }
 
     }
