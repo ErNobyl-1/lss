@@ -27,14 +27,13 @@ TODO
         // add css
         $('head').append(`
         <style>
+        .halfscreen { height: calc(50vh - 16.5px) !important; }
         .mission_progress { margin: 0; padding: 0; margin-bottom: 5px; }
         .patient_progress { margin: 0; padding: 0; margin-bottom: 2.5px; }
         .mission_vehicle_state { display: none; }
         .panel-default { margin-bottom: 5px; }
         </style>
         `);
-        // js for style
-        var docheight = $(window).height();
         // add navbar at bottom of page
         $('body').prepend(`
         <div class="container-fluid w-100" style="padding: 5px 20px; border-top: 1px solid #bdbdbd; display: flex; flex-direction: row; flex-wrap: nowrap;" id="redesign-navbar">
@@ -43,10 +42,12 @@ TODO
         $('.glyphicon-menu-up').css('display','none');
         $('#mission_speed_play').css('display','none');
         $('#redesign-navbar')
-            .append('<a href="/credits/overview" class="lightbox-open" style="color: black;" id="redesign-credits-outer" title="aktuelle Credits">💸 </a>')
+            .append('<a href="#" class="lightbox-open" id="redesign-user-link" style="color: black;">🧑‍🚒 </a>')
+            .append('<a href="/credits/overview" class="lightbox-open" style="margin-left: 15px; color: black;" id="redesign-credits-outer" title="aktuelle Credits">💸 </a>')
             .append('<a href="/toplist" class="lightbox-open" style="color: black; margin-left: 15px;" id="lsstoplistlivelink" title="aktuelle Platzierung in der Toplist">🏆 <span id="lsstoplistlive">0</span></span>')
             .append('<a href="/verband" class="lightbox-open" style="margin-left: 15px; color: black;">🌐 Verband</a>')
             .append('<div style="position: relative;"><a href="#" style="margin-left: 15px; color: black;" class="chat-toggle-link">💬 Chat</a><div style="display: none; border: 5px solid #89c4ff; position: absolute; height: 700px; width: 500px; left: 0; top: -710px; z-index: 99999; background-color: #fff; border-radius: 15px; padding: 10px;" id="redesign-chat-toggle"><div style="height: 100%; overflow-y: scroll;" id="redesign-chat-outer"></div></div></div>')
+            .append('<a href="/tasks/index" class="lightbox-open" id="redesign-task" style="color: black; margin-left: 15px;">✅ Aufgaben </a>')
             .append('<div id="redesign-sprechwunsch-outer"></div>')
             .append($('.mission-state-filters').css('margin','0 15px 0 auto'))
             .append($('.mission-participation-filters'))
@@ -69,8 +70,11 @@ TODO
             toggleChat();
         });
         $('#redesign-sprechwunsch-outer').css('height','22.4px').css('overflow','hidden').append($('#radio_messages_important'));
+        $('#redesign-task').append($('#completed_tasks_counter'));
+        $('#redesign-user-link').attr('href', '/profile/'+user_id).append(username);
         // add Einsätze
-        $('body').prepend('<div class="row p-3" id="redesign-missions-outer" style="height: '+(docheight / 2 - 16)+'px; margin: 0; padding: 10px 0px;"></div>');
+        $('body').prepend('<div class="row p-3" id="redesign-missions-outer" style="margin: 0; padding: 10px 0px;"></div>');
+        $('#redesign-missions-outer').addClass('halfscreen');
         const einsatzlisten = [
             ["mission_list"],
             ["mission_list_krankentransporte", "mission_list_krankentransporte_alliance", "ktw_no_transports"],
@@ -86,7 +90,7 @@ TODO
         }
         // add map
         $('#redesign-missions-outer').before($('#map'));
-        $('#map').css('height',(docheight / 2 - 17)+'px');
+        $('#map').addClass('halfscreen');
         map.eachLayer( function(layer) {
             if( layer instanceof L.TileLayer ) {
                 map.removeLayer(layer);
