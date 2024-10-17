@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name         LSS Redesign Index
+// @name         LSS Redesign
 // @namespace    http://tampermonkey.net/
 // @version      2024-10-17
 // @description  try to take over the world!
 // @author       ErNobyl
-// @match        https://www.leitstellenspiel.de/
+// @match        https://www.leitstellenspiel.de/*
 // @grant        none
 // @updateURL    https://github.com/ErNobyl-1/lss/raw/refs/heads/main/LSSRedesign.user.js
 // ==/UserScript==
@@ -19,78 +19,9 @@ TODO
 
 (function() {
     'use strict';
-    function bootstraplssredesign() {
-        // hide normal game
-        $('#col_navbar_holder').css('display','none');
-        $('#main_container').css('display','none');
-        $('.client-id').css('display','none');
-        // add css
-        $('head').append(`
-        <style>
-        .halfscreen { height: calc(50vh - 16.5px) !important; }
-        .mission_progress { margin: 0; padding: 0; margin-bottom: 5px; }
-        .patient_progress { margin: 0; padding: 0; margin-bottom: 2.5px; }
-        .mission_vehicle_state { display: none; }
-        .panel-default { margin-bottom: 5px; }
-        </style>
-        `);
-        // add navbar at bottom of page
-        $('body').prepend(`
-        <div class="container-fluid w-100" style="padding: 5px 20px; border-top: 1px solid #bdbdbd; display: flex; flex-direction: row; flex-wrap: nowrap;" id="redesign-navbar">
-        </div>
-        `);
-        $('.glyphicon-menu-up').css('display','none');
-        $('#mission_speed_play').css('display','none');
-        $('#redesign-navbar')
-            .append('<a href="#" class="lightbox-open" id="redesign-user-link" style="color: black;">🧑‍🚒 </a>')
-            .append('<a href="/credits/overview" class="lightbox-open" style="margin-left: 15px; color: black;" id="redesign-credits-outer" title="aktuelle Credits">💸 </a>')
-            .append('<a href="/toplist" class="lightbox-open" style="color: black; margin-left: 15px;" id="lsstoplistlivelink" title="aktuelle Platzierung in der Toplist">🏆 <span id="lsstoplistlive">0</span></span>')
-            .append('<a href="/verband" class="lightbox-open" style="margin-left: 15px; color: black;">🌐 Verband</a>')
-            .append('<div style="position: relative;"><a href="#" style="margin-left: 15px; color: black;" class="chat-toggle-link">💬 Chat</a><div style="display: none; border: 5px solid #89c4ff; position: absolute; height: 700px; width: 500px; left: 0; top: -710px; z-index: 99999; background-color: #fff; border-radius: 15px; padding: 10px;" id="redesign-chat-toggle"><div style="height: 100%; overflow-y: scroll;" id="redesign-chat-outer"></div></div></div>')
-            .append('<a href="/tasks/index" class="lightbox-open" id="redesign-task" style="color: black; margin-left: 15px;">✅ Aufgaben </a>')
-            .append('<div id="redesign-sprechwunsch-outer"></div>')
-            .append($('.mission-state-filters').css('margin','0 15px 0 auto'))
-            .append($('.mission-participation-filters'))
-            .append($('#missions-panel-main').css('margin-left','15px').css('display','inline-block'))
-        $('#redesign-credits-outer').append($('.credits-value')[0]);
-        $('.mission-state-filters > a > .icon').remove();
-        $('#mission_select_unattended').prepend('<span style="color: red;">⬤</span>');
-        $('#mission_select_attended').prepend('<span style="color: yellow;">⬤</span>');
-        $('#mission_select_finishing').prepend('<span style="color: limegreen;">⬤</span>');
-        $('#redesign-chat-outer').append($('#chat_panel_body').css('padding','0 5px 0 0')).prepend('<span style="float: right;"><button class="chat-toggle-link btn btn-sm">minimieren</button></span>');
-         function toggleChat() {
-            var redesigncurrentchatval = $('#redesign-chat-toggle').css('display');
-            if(redesigncurrentchatval == 'none') {
-                $('#redesign-chat-toggle').css('display','inline-block')
-            } else {
-                $('#redesign-chat-toggle').css('display','none')
-            }
-        }
-        $('.chat-toggle-link').on('click', function() {
-            toggleChat();
-        });
-        $('#redesign-sprechwunsch-outer').css('height','22.4px').css('overflow','hidden').append($('#radio_messages_important'));
-        $('#redesign-task').append($('#completed_tasks_counter'));
-        $('#redesign-user-link').attr('href', '/profile/'+user_id).append(username);
-        // add Einsätze
-        $('body').prepend('<div class="row p-3" id="redesign-missions-outer" style="margin: 0; padding: 10px 0px;"></div>');
-        $('#redesign-missions-outer').addClass('halfscreen');
-        const einsatzlisten = [
-            ["mission_list"],
-            ["mission_list_krankentransporte", "mission_list_krankentransporte_alliance", "ktw_no_transports"],
-            ["mission_list_alliance", "mission_list_alliance_event"],
-            ["mission_list_sicherheitswache", "mission_list_sicherheitswache_alliance"],
-        ];
-        const colint = Math.floor(12 / einsatzlisten.length);
-        for(var i = 0; i < einsatzlisten.length; i++) {
-            $('#redesign-missions-outer').append('<div class="col-xs-'+colint+'" id="redesign-missions-list-'+i+'" style="height: 100%; overflow-y: scroll; overflow-x: hidden; padding: 0px 2px 0px 5px;"></div>');
-            for(var j = 0; j < einsatzlisten[i].length; j++) {
-                $('#redesign-missions-list-'+i).append($('#'+einsatzlisten[i][j]));
-            }
-        }
-        // add map
-        $('#redesign-missions-outer').before($('#map'));
-        $('#map').addClass('halfscreen');
+
+    // redesign the map
+    function redesignMap() {
         map.eachLayer( function(layer) {
             if( layer instanceof L.TileLayer ) {
                 map.removeLayer(layer);
@@ -151,8 +82,89 @@ TODO
             "Google Terrain": googleTerrain
         };
         L.control.layers(baseMaps).addTo(map);
-        // add chat window
     }
+
+    // redesign pages
+    function bootstraplssredesign(site) {
+
+        // index page
+        if(site == 'index') {
+            // hide normal game
+            $('#col_navbar_holder').css('display','none');
+            $('#main_container').css('display','none');
+            $('.client-id').css('display','none');
+            // add css
+            $('head').append(`
+        <style>
+        .halfscreen { height: calc(50vh - 16.5px) !important; }
+        .mission_progress { margin: 0; padding: 0; margin-bottom: 5px; }
+        .patient_progress { margin: 0; padding: 0; margin-bottom: 2.5px; }
+        .mission_vehicle_state { display: none; }
+        .panel-default { margin-bottom: 5px; }
+        </style>
+        `);
+            // add navbar at bottom of page
+            $('body').prepend(`
+        <div class="container-fluid w-100" style="padding: 5px 20px; border-top: 1px solid #bdbdbd; display: flex; flex-direction: row; flex-wrap: nowrap;" id="redesign-navbar">
+        </div>
+        `);
+            $('.glyphicon-menu-up').css('display','none');
+            $('#mission_speed_play').css('display','none');
+            $('#redesign-navbar')
+                .append('<a href="#" class="lightbox-open" id="redesign-user-link" style="color: black;">🧑‍🚒 </a>')
+                .append('<a href="/credits/overview" class="lightbox-open" style="margin-left: 15px; color: black;" id="redesign-credits-outer" title="aktuelle Credits">💸 </a>')
+                .append('<a href="/toplist" class="lightbox-open" style="color: black; margin-left: 15px;" id="lsstoplistlivelink" title="aktuelle Platzierung in der Toplist">🏆 <span id="lsstoplistlive">0</span></span>')
+                .append('<a href="/verband" class="lightbox-open" style="margin-left: 15px; color: black;">🌐 Verband</a>')
+                .append('<div style="position: relative;"><a href="#" style="margin-left: 15px; color: black;" class="chat-toggle-link">💬 Chat</a><div style="display: none; border: 5px solid #89c4ff; position: absolute; height: 700px; width: 500px; left: 0; top: -710px; z-index: 99999; background-color: #fff; border-radius: 15px; padding: 10px;" id="redesign-chat-toggle"><div style="height: 100%; overflow-y: scroll;" id="redesign-chat-outer"></div></div></div>')
+                .append('<a href="/tasks/index" class="lightbox-open" id="redesign-task" style="color: black; margin-left: 15px;">✅ Aufgaben </a>')
+                .append('<div id="redesign-sprechwunsch-outer"></div>')
+                .append($('.mission-state-filters').css('margin','0 15px 0 auto'))
+                .append($('.mission-participation-filters'))
+                .append($('#missions-panel-main').css('margin-left','15px').css('display','inline-block'))
+            $('#redesign-credits-outer').append($('.credits-value')[0]);
+            $('.mission-state-filters > a > .icon').remove();
+            $('#mission_select_unattended').prepend('<span style="color: red;">⬤</span>');
+            $('#mission_select_attended').prepend('<span style="color: yellow;">⬤</span>');
+            $('#mission_select_finishing').prepend('<span style="color: limegreen;">⬤</span>');
+            $('#redesign-chat-outer').append($('#chat_panel_body').css('padding','0 5px 0 0')).prepend('<span style="float: right;"><button class="chat-toggle-link btn btn-sm">minimieren</button></span>');
+            function toggleChat() {
+                var redesigncurrentchatval = $('#redesign-chat-toggle').css('display');
+                if(redesigncurrentchatval == 'none') {
+                    $('#redesign-chat-toggle').css('display','inline-block')
+                } else {
+                    $('#redesign-chat-toggle').css('display','none')
+                }
+            }
+            $('.chat-toggle-link').on('click', function() {
+                toggleChat();
+            });
+            $('#redesign-sprechwunsch-outer').css('height','22.4px').css('overflow','hidden').append($('#radio_messages_important'));
+            $('#redesign-task').append($('#completed_tasks_counter'));
+            $('#redesign-user-link').attr('href', '/profile/'+user_id).append(username);
+            // add Einsätze
+            $('body').prepend('<div class="row p-3" id="redesign-missions-outer" style="margin: 0; padding: 10px 0px;"></div>');
+            $('#redesign-missions-outer').addClass('halfscreen');
+            const einsatzlisten = [
+                ["mission_list"],
+                ["mission_list_krankentransporte", "mission_list_krankentransporte_alliance", "ktw_no_transports"],
+                ["mission_list_alliance", "mission_list_alliance_event"],
+                ["mission_list_sicherheitswache", "mission_list_sicherheitswache_alliance"],
+            ];
+            const colint = Math.floor(12 / einsatzlisten.length);
+            for(var i = 0; i < einsatzlisten.length; i++) {
+                $('#redesign-missions-outer').append('<div class="col-xs-'+colint+'" id="redesign-missions-list-'+i+'" style="height: 100%; overflow-y: scroll; overflow-x: hidden; padding: 0px 2px 0px 5px;"></div>');
+                for(var j = 0; j < einsatzlisten[i].length; j++) {
+                    $('#redesign-missions-list-'+i).append($('#'+einsatzlisten[i][j]));
+                }
+            }
+            // add map
+            $('#redesign-missions-outer').before($('#map'));
+            $('#map').addClass('halfscreen');
+            redesignMap();
+        }
+
+    }
+
     // live toplist
     var savedcredits = 0;
     var lastupdate = 0;
@@ -175,9 +187,18 @@ TODO
             savedcredits = lastcredits;
         }
     }
+
+    // bootstrap
     $( document ).ready(function() {
-        bootstraplssredesign();
-        updatePlace();
-        setInterval(updatePlace, 1000);
+        var site = window.location.pathname;
+        console.log(site);
+        if(site == '/') {
+            bootstraplssredesign('index');
+            updatePlace();
+            setInterval(updatePlace, 1000);
+        }
+        if(site.includes('/profile/')) {
+            bootstraplssredesign('profile');
+        }
     });
 })();
