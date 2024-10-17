@@ -22,6 +22,7 @@ TODO
 
     // redesign the map
     function redesignMap() {
+        map.options.zoomSnap = 0.1;
         map.eachLayer( function(layer) {
             if( layer instanceof L.TileLayer ) {
                 map.removeLayer(layer);
@@ -82,6 +83,19 @@ TODO
             "Google Terrain": googleTerrain
         };
         L.control.layers(baseMaps).addTo(map);
+    }
+
+    // show all onmap buildings
+    function showBuildings() {
+        var usermarkers = new L.FeatureGroup();
+        map.eachLayer( function(layer) {
+            if(layer instanceof L.Marker) {
+                if(layer.building_id) {
+                    usermarkers.addLayer(layer);
+                }
+            }
+        });
+        map.fitBounds(usermarkers.getBounds(), {paddingTopLeft: [0, 50], paddingBottomRight: [0, 25]});
     }
 
     // redesign pages
@@ -161,7 +175,6 @@ TODO
             $('#redesign-missions-outer').before($('#map'));
             $('#map').addClass('halfscreen');
             redesignMap();
-            map.zoomOut(3);
         }
 
     }
@@ -192,11 +205,12 @@ TODO
     // bootstrap
     $( document ).ready(function() {
         var site = window.location.pathname;
-        console.log(site);
         if(site == '/') {
             bootstraplssredesign('index');
             updatePlace();
             setInterval(updatePlace, 1000);
+            map.zoomOut(15);
+            showBuildings();
         }
         if(site.includes('/profile/')) {
             bootstraplssredesign('profile');
