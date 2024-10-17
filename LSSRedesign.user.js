@@ -129,7 +129,7 @@ TODO
                 .append('<a href="/credits/overview" class="lightbox-open" style="margin-left: 15px; color: black;" id="redesign-credits-outer" title="aktuelle Credits">💸 </a>')
                 .append('<a href="/toplist" class="lightbox-open" style="color: black; margin-left: 15px;" id="lsstoplistlivelink" title="aktuelle Platzierung in der Toplist">🏆 <span id="lsstoplistlive">0</span></span>')
                 .append('<a href="/verband" class="lightbox-open" style="margin-left: 15px; color: black;">🌐 Verband</a>')
-                .append('<div style="position: relative;"><a href="#" style="margin-left: 15px; color: black;" class="chat-toggle-link">💬 Chat</a><div style="display: none; border: 5px solid #89c4ff; position: absolute; height: 700px; width: 500px; left: 0; top: -710px; z-index: 99999; background-color: #fff; border-radius: 15px; padding: 10px;" id="redesign-chat-toggle"><div style="height: 100%; overflow-y: scroll;" id="redesign-chat-outer"></div></div></div>')
+                .append('<div style="position: relative;"><a href="#" style="margin-left: 15px; color: black;" id="redesign-chat-link" class="chat-toggle-link">💬 Chat</a><div style="display: none; border: 5px solid #89c4ff; position: absolute; height: 700px; width: 500px; left: 0; top: -710px; z-index: 99999; background-color: #fff; border-radius: 15px; padding: 10px;" id="redesign-chat-toggle"><div style="height: 100%; overflow-y: scroll;" id="redesign-chat-outer"></div></div></div>')
                 .append('<a href="/tasks/index" class="lightbox-open" id="redesign-task" style="color: black; margin-left: 15px;">✅ Aufgaben </a>')
                 .append('<div id="redesign-sprechwunsch-outer"></div>')
                 .append($('.mission-state-filters').css('margin','0 15px 0 auto'))
@@ -175,6 +175,24 @@ TODO
             $('#redesign-missions-outer').before($('#map'));
             $('#map').addClass('halfscreen');
             redesignMap();
+            // chat
+            var savedmessage = "";
+            function redesignupdateChat() {
+                if($('#redesign-chat-toggle').css('display') == 'none') {
+                    if(savedmessage != "" && savedmessage != $('#mission_chat_messages > li')[0]) {
+                        if($('#redesign-new-message-hint').lengt > 0) {
+                            // do nothing, hint already exists
+                        } else {
+                            $('#redesign-chat-link').append('<span id="redesign-new-message-hint" class="badge message_new" style="margin-left: 5px;">neu</span>')
+                        }
+                    }
+                }
+                savedmessage = $('#mission_chat_messages > li')[0]
+            }
+            setInterval(redesignupdateChat, 1000);
+            $('#redesign-chat-link').on('click', function() {
+                $('#redesign-new-message-hint').remove();
+            });
         }
 
     }
@@ -182,19 +200,19 @@ TODO
     // live toplist
     var savedcredits = 0;
     var lastupdate = 0;
-    async function getApi() {
+    async function redesigngetApi() {
         return await fetch("/api/credits.json", {
             cache: "reload",
         })
         .then(response => response.json());
     }
-    async function updatePlace() {
+    async function redesignupdatePlace() {
         var lastcredits = $('.credits-value');
         if(lastcredits.length > 0) {
             lastcredits = $('.credits-value')[0].innerText;
             if(savedcredits != lastcredits && lastupdate < (Date.now() - 1000 * 30)) {
                 lastupdate = Date.now();
-                var data = await getApi();
+                var data = await redesigngetApi();
                 var newplace = data.user_toplist_position;
                 $('#lsstoplistlive').text(newplace.toLocaleString());
             }
@@ -207,8 +225,8 @@ TODO
         var site = window.location.pathname;
         if(site == '/') {
             bootstraplssredesign('index');
-            updatePlace();
-            setInterval(updatePlace, 1000);
+            redesignupdatePlace();
+            setInterval(redesignupdatePlace, 1000);
             map.zoomOut(15);
             showBuildings();
         }
