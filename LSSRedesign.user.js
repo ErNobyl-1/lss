@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LSS Redesign Index
 // @namespace    http://tampermonkey.net/
-// @version      2024-10-16
+// @version      2024-10-17
 // @description  try to take over the world!
 // @author       ErNobyl
 // @match        https://www.leitstellenspiel.de/
